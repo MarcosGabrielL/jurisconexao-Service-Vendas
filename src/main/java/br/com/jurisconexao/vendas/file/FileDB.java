@@ -33,6 +33,8 @@ public class FileDB {
   private String type;
 
   @Lob
+  @Basic(fetch = FetchType.LAZY)
+  @Column(name = "DATA", columnDefinition = "BLOB", nullable = false)
   private byte[] data;
 
   public FileDB() {
