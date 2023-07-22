@@ -11,6 +11,7 @@ package br.com.jurisconexao.vendas.file;
  */
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -62,7 +63,26 @@ public class FileController {
       return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
     } catch (Exception e) {
     	e.printStackTrace();
-      message = "Could not upload the file: " + file.getOriginalFilename() + "! "+e.getLocalizedMessage();
+      message = "Could not upload the file: " + file.getOriginalFilename() + "! "+e.getMessage();
+      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+    }
+  }
+  
+  @PostMapping(value = "/loja/banner/BanneruploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<ResponseMessage> SaveFileLojaBanner(@RequestParam("file") MultipartFile file,
+          @RequestParam("idvendedor") String idvendedor,
+          @RequestParam("id") String id){
+    String message = "";
+    try {
+    	//id = 1 ou 2 
+      storageService.storeBanner(file, "", idvendedor, id); 
+
+      message = "Uploaded the file successfully: " + file.getOriginalFilename();
+      return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+    } catch (Exception e) {
+    	//e.printStackTrace();
+    	 message = "Could not upload the file: " + file.getOriginalFilename() + " file.getSize() in bytes : "+ file.getSize() + "! "+e.getLocalizedMessage();
+      System.err.println(message);
       return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
     }
   }
@@ -78,7 +98,7 @@ public class FileController {
       return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
     } catch (Exception e) {
     	e.printStackTrace();
-      message = "Could not upload the file: " + file.getOriginalFilename() + "! "+e.getLocalizedMessage();
+      message = "Could not upload the file: " + file.getOriginalFilename() + ""+ file.getSize() + "! "+e.getLocalizedMessage();
       return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
     }
   }
@@ -118,6 +138,14 @@ public class FileController {
     return ResponseEntity.status(HttpStatus.OK).body(files);
   }
   
+  @GetMapping("/filelist/banners/loja/{id}")
+  public ResponseEntity<List<FileDB>> findBannerByIdLoja(@PathVariable String id) {
+     List<FileDB> files = storageService.findBannerByIdProduto(id);
+      
+     
+    return ResponseEntity.status(HttpStatus.OK).body(files);
+  }
+  
 
   @GetMapping("/download/file/{id}")
   public ResponseEntity<byte[]> getFile(@PathVariable Long id) {
@@ -136,5 +164,13 @@ public class FileController {
             .contentType(MediaType.IMAGE_PNG).body(fileDB.getData());
   }
   
-  
+  @GetMapping("/banner/delete/{idvendedor}")
+  public ResponseEntity<ResponseMessage> deleteBanner(@PathVariable String idvendedor) {
+	  System.err.println(idvendedor);
+      storageService.deleteBannersFromVendedor(idvendedor);
+
+    return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("Arquivos deletados com sucesso"));
+  }
+    
+   
 }

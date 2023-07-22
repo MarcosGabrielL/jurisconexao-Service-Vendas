@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,6 +55,20 @@ public class FileStorageService {
 
     return fileDBRepository.save(FileDB);
   }
+   
+   public FileDB storeBanner(MultipartFile file, String idpost, String idvendedor, String id) throws IOException {
+	      
+	    String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+	    FileDB FileDB = new FileDB();
+	    FileDB.setIdbanner(id);
+	    FileDB.setData(file.getBytes());
+	    FileDB.setIdpost("");
+	    FileDB.setIdvendedor(idvendedor);
+	    FileDB.setName(fileName);
+	    FileDB.setType("banner");
+
+	    return fileDBRepository.save(FileDB);
+	  }
 
   public FileDB getFile(Long id) {
     return fileDBRepository.findById(id).get();
@@ -67,7 +82,21 @@ public class FileStorageService {
     return fileDBRepository.findByIdVendedor(id);
   }
   
+  public List<FileDB> findBannerByIdProduto(String id) {
+	    return fileDBRepository.findBannerByIdProduto(id);
+	  }
+  
   public Stream<FileDB> getAllFiles() {
     return fileDBRepository.findAll().stream();
+  }
+  
+  public void deleteBannersFromVendedor(String idvendedor) {
+	  try{
+	     fileDBRepository.deleteBannersFromVendedor(idvendedor);
+	  }catch(DataIntegrityViolationException e){
+		  System.err.println(e.getMessage());
+          throw new DataIntegrityViolationException(
+                  "Não foi possivel deletar os Arquivos");
+      }
   }
 }
