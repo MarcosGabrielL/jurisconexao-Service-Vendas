@@ -27,7 +27,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
       Optional<List<Produto>> findProdutoByIdVendedor(String id);
 
       @Query("SELECT u FROM Produto u WHERE u.vendedor_id = ?1 AND u.destaque = true order by u.id")
-	Optional<Produto> findProdutosDestacadosByIdVendedor(String id);
+      List<Produto> findProdutosDestacadosByIdVendedor(String id);
 }
 
     
