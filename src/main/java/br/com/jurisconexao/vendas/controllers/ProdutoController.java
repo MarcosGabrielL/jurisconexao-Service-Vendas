@@ -201,7 +201,7 @@ public class ProdutoController {
         
     	  
       
-       List<Produto> produtos = vs.findProdutoByIdVendedor(id);
+       List<Produto> produtos = vs.findProdutosDestacadosByIdVendedor(id);
        
        List<ProdutoDTO> produtosdao = new ArrayList();
        

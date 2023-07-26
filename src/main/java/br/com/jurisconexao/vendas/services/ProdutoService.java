@@ -53,9 +53,9 @@ public class ProdutoService {
         }
     }
 
-	/*public List<Produto> findProdutosDestacadosByIdVendedor(String id) {
+	public List<Produto> findProdutosDestacadosByIdVendedor(String id) {
 		  return rp.findProdutosDestacadosByIdVendedor(id)
 	                .orElseThrow(() -> new UserNotFoundException("Produto by id " + id + " was not found"));
-	}*/
+	}
     
 }
