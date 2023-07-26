@@ -194,5 +194,51 @@ public class ProdutoController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     
+    @GetMapping("destaque/produtodto/byvendedor")
+    public ResponseEntity<List<ProdutoDTO>> getProdutoDestaqueDAOByIdVendedor (
+            @RequestParam("token") String token,
+            @RequestParam("id") String id) {
+        
+    	  
+      
+       List<Produto> produtos = vs.findProdutoByIdVendedor(id);
+       
+       List<ProdutoDTO> produtosdao = new ArrayList();
+       
+       for(Produto p: produtos){
+           ProdutoDTO pdao = new ProdutoDTO();
+           pdao.setId(p.getId());
+           pdao.setCodigo(p.getCodigo());
+           pdao.setDescricao(p.getDescricao());
+           pdao.setPrecoun(p.getPrecoun());
+           pdao.setQuantidade(p.getQuantidade());
+           pdao.setTipo(p.getTipo());
+           pdao.setUnidade(p.getUnidade());
+           pdao.setData(p.getData());
+           pdao.setVendedor_id(p.getVendedor_id());
+           
+           List<FileDB> files = storageService.findByIdProduto(p.getId().toString());
+           pdao.setFiles(files);
+           
+            System.out.println("Pdao Files"+pdao.getFiles());
+           for(FileDB d: files){
+           System.out.println("Files: "+ d.getName());
+                   }
+           
+           List<String> urls = new ArrayList();
+           for(FileDB f: files){
+               urls.add("data:image/png;base64,"+Arrays.toString(f.getData()));
+           }
+           pdao.setUrls(urls);
+           
+            System.out.println("Files"+pdao.getUrls());
+           
+           produtosdao.add(pdao);
+       }
+       
+        
+        return new ResponseEntity<>(produtosdao, HttpStatus.OK);
+    }
+    
 }
 

@@ -52,5 +52,10 @@ public class ProdutoService {
                     "Não foi possivel deletar o Produto");
         }
     }
+
+	/*public List<Produto> findProdutosDestacadosByIdVendedor(String id) {
+		  return rp.findProdutosDestacadosByIdVendedor(id)
+	                .orElseThrow(() -> new UserNotFoundException("Produto by id " + id + " was not found"));
+	}*/
     
 }
