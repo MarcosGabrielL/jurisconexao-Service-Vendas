@@ -19,6 +19,7 @@ import br.com.jurisconexao.vendas.file.FileDB;
 import br.com.jurisconexao.vendas.file.FileStorageService;
 import br.com.jurisconexao.vendas.models.Produto;
 import br.com.jurisconexao.vendas.models.ProdutoDTO;
+import br.com.jurisconexao.vendas.models.ProdutoDTO2;
 import br.com.jurisconexao.vendas.repositories.ProdutoRepository;
 import br.com.jurisconexao.vendas.services.ProdutoService;
 import br.com.jurisconexao.vendas.util.validateToken;
@@ -195,7 +196,7 @@ public class ProdutoController {
     }
     
     @GetMapping("destaque/produtodto/byvendedor")
-    public ResponseEntity<List<ProdutoDTO>> getProdutoDestaqueDAOByIdVendedor (
+    public ResponseEntity<List<ProdutoDTO2>> getProdutoDestaqueDAOByIdVendedor (
             @RequestParam("token") String token,
             @RequestParam("id") String id) {
         
@@ -203,10 +204,10 @@ public class ProdutoController {
       
        List<Produto> produtos = vs.findProdutosDestacadosByIdVendedor(id);
        
-       List<ProdutoDTO> produtosdao = new ArrayList();
+       List<ProdutoDTO2> produtosdao = new ArrayList();
        
        for(Produto p: produtos){
-           ProdutoDTO pdao = new ProdutoDTO();
+    	   ProdutoDTO2 pdao = new ProdutoDTO2();
            pdao.setId(p.getId());
            pdao.setCodigo(p.getCodigo());
            pdao.setDescricao(p.getDescricao());
@@ -218,16 +219,11 @@ public class ProdutoController {
            pdao.setVendedor_id(p.getVendedor_id());
            
            List<FileDB> files = storageService.findByIdProduto(p.getId().toString());
-           pdao.setFiles(files);
+          
            
-            System.out.println("Pdao Files"+pdao.getFiles());
-           for(FileDB d: files){
-           System.out.println("Files: "+ d.getName());
-                   }
-           
-           List<String> urls = new ArrayList();
+           List<byte[]> urls = new ArrayList();
            for(FileDB f: files){
-               urls.add("data:image/png;base64,"+Arrays.toString(f.getData()));
+               urls.add(f.getData());
            }
            pdao.setUrls(urls);
            
