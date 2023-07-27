@@ -23,6 +23,7 @@ import br.com.jurisconexao.vendas.models.ProdutoDTO;
 import br.com.jurisconexao.vendas.models.ProdutoDTO2;
 import br.com.jurisconexao.vendas.repositories.ProdutoRepository;
 import br.com.jurisconexao.vendas.services.CoresService;
+import br.com.jurisconexao.vendas.services.FavoritosService;
 import br.com.jurisconexao.vendas.services.ProdutoService;
 import br.com.jurisconexao.vendas.util.validateToken;
 import java.net.URI;
@@ -58,6 +59,9 @@ public class ProdutoController {
       
       @Autowired
       private CoresService coresService;
+      
+      @Autowired
+      private FavoritosService favoritoService;
      
     @GetMapping
     public ResponseEntity<List<Produto>> getAll() {
@@ -273,8 +277,8 @@ public class ProdutoController {
            }
            pdao.setUrls(urls);
            pdao.setCores(coresService.findByIdProduto(p.getId().toString()));
-          
-
+           pdao.setFavorito(favoritoService.existsByVendedor(p.getId().toString(),idcliente));
+           
            produtosdao.add(pdao);
        }
        

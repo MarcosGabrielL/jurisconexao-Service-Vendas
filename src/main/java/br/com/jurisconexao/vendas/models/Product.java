@@ -27,6 +27,7 @@ public class Product {
     private String loja = "Sede";
     private float SubTotal;
     private boolean destaque;
+    private boolean favorito;
     private String vendedor_id;
     private List<Cores> cores;
     private List<byte[]> urls;
@@ -36,6 +37,15 @@ public class Product {
 	
 	public boolean isDestaque() {
 		return destaque;
+	}
+
+	
+	public boolean isFavorito() {
+		return favorito;
+	}
+
+	public void setFavorito(boolean favorito) {
+		this.favorito = favorito;
 	}
 
 	public void setDestaque(boolean destaque) {
@@ -137,10 +147,10 @@ public class Product {
 	public void setUrls(List<byte[]> urls) {
 		this.urls = urls;
 	}
-	
+
 	public Product(Long id, String codigo, String descricao, String precoun, String ventrada, float quantidade,
 			String tipo, String unidade, String unidadeTributavel, String data, String loja, float subTotal,
-			boolean destaque, String vendedor_id, List<Cores> cores, List<byte[]> urls) {
+			boolean destaque, boolean favorito, String vendedor_id, List<Cores> cores, List<byte[]> urls) {
 		super();
 		this.id = id;
 		this.codigo = codigo;
@@ -155,6 +165,7 @@ public class Product {
 		this.loja = loja;
 		SubTotal = subTotal;
 		this.destaque = destaque;
+		this.favorito = favorito;
 		this.vendedor_id = vendedor_id;
 		this.cores = cores;
 		this.urls = urls;
@@ -170,9 +181,11 @@ public class Product {
 		return "Product [id=" + id + ", codigo=" + codigo + ", descricao=" + descricao + ", precoun=" + precoun
 				+ ", Ventrada=" + Ventrada + ", quantidade=" + quantidade + ", tipo=" + tipo + ", Unidade=" + Unidade
 				+ ", UnidadeTributavel=" + UnidadeTributavel + ", data=" + data + ", loja=" + loja + ", SubTotal="
-				+ SubTotal + ", destaque=" + destaque + ", vendedor_id=" + vendedor_id + ", cores=" + cores + ", urls="
-				+ urls + "]";
+				+ SubTotal + ", destaque=" + destaque + ", favorito=" + favorito + ", vendedor_id=" + vendedor_id
+				+ ", cores=" + cores + ", urls=" + urls + "]";
 	}
+	
+	
 	
 	
 
