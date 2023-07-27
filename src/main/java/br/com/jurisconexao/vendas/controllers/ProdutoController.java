@@ -17,10 +17,12 @@ package br.com.jurisconexao.vendas.controllers;
 
 import br.com.jurisconexao.vendas.file.FileDB;
 import br.com.jurisconexao.vendas.file.FileStorageService;
+import br.com.jurisconexao.vendas.models.Product;
 import br.com.jurisconexao.vendas.models.Produto;
 import br.com.jurisconexao.vendas.models.ProdutoDTO;
 import br.com.jurisconexao.vendas.models.ProdutoDTO2;
 import br.com.jurisconexao.vendas.repositories.ProdutoRepository;
+import br.com.jurisconexao.vendas.services.CoresService;
 import br.com.jurisconexao.vendas.services.ProdutoService;
 import br.com.jurisconexao.vendas.util.validateToken;
 import java.net.URI;
@@ -53,6 +55,9 @@ public class ProdutoController {
      
       @Autowired
   private FileStorageService storageService;
+      
+      @Autowired
+      private CoresService coresService;
      
     @GetMapping
     public ResponseEntity<List<Produto>> getAll() {
@@ -229,6 +234,47 @@ public class ProdutoController {
            
             System.out.println("Files"+pdao.getUrls());
            
+           produtosdao.add(pdao);
+       }
+       
+        
+        return new ResponseEntity<>(produtosdao, HttpStatus.OK);
+    }
+    
+    @GetMapping("destaque/produtodetails/by/vendedor/cliente")
+    public ResponseEntity<List<Product>> getAllProductsByIdVendedor (
+            @RequestParam("token") String token,
+            @RequestParam("idvendedor") String idvendedor,
+            @RequestParam("idcliente") String idcliente) {
+        
+    	  
+      
+       List<Produto> produtos = vs.findProdutoByIdVendedor(idvendedor);
+       
+       List<Product> produtosdao = new ArrayList();
+       
+       for(Produto p: produtos){
+    	   Product pdao = new Product();
+           pdao.setId(p.getId());
+           pdao.setCodigo(p.getCodigo());
+           pdao.setDescricao(p.getDescricao());
+           pdao.setPrecoun(p.getPrecoun());
+           pdao.setQuantidade(p.getQuantidade());
+           pdao.setTipo(p.getTipo());
+           pdao.setUnidade(p.getUnidade());
+           pdao.setData(p.getData());
+           pdao.setVendedor_id(p.getVendedor_id());
+           pdao.setDestaque(p.getDestaque());
+           
+           List<FileDB> files = storageService.findByIdProduto(p.getId().toString());
+           List<byte[]> urls = new ArrayList();
+           for(FileDB f: files){
+               urls.add(f.getData());
+           }
+           pdao.setUrls(urls);
+           pdao.setCores(coresService.findByIdProduto(p.getId().toString()));
+          
+
            produtosdao.add(pdao);
        }
        
